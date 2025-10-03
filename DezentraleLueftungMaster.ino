@@ -94,6 +94,7 @@ void sendClientCommand(int clientId, String command) {
 void loadClientPairs(String pairStr) {
   pairCount = 0;
   totalClients = 0;
+  currentPollIndex = 0;
   int start = 0;
   while (true) {
     int semicolonIndex = pairStr.indexOf(';', start);
@@ -111,12 +112,14 @@ void loadClientPairs(String pairStr) {
         String bStr = pairEntry.substring(commaIndex + 1);
         int a = aStr.toInt();
         int b = bStr.toInt();
-        if (a > 0 && b > 0 && pairCount < MAX_PAIRS) {
+        if (a > 0 && a <= MAX_CLIENT_ID && b > 0 && b <= MAX_CLIENT_ID && pairCount < MAX_PAIRS) {
           pairs[pairCount].clientA = a;
           pairs[pairCount].clientB = b;
           pairs[pairCount].state = false;  // Standardzustand
           clientList[totalClients++] = a;
           clientList[totalClients++] = b;
+          sensorData[a].valid = false;
+          sensorData[b].valid = false;
           pairCount++;
         }
       }
